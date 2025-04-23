@@ -8,22 +8,24 @@ require_once 'Task.php';
  use App\Persona;
  use App\utilities\ConnectionDB;
  use App\Task;
-// if($_SERVER['REQUEST_METHOD'] == 'POST') {
- $tittle = $_POST['tittle'];
- $description = $_POST['description'];
- $beginDate = $_POST['begin_date'];
- $endDate = $_POST['end_date'];
+ if($_SERVER['REQUEST_METHOD'] == 'POST') {
+     $tittle = $_POST['tittle'];
+     $description = $_POST['description'];
+     $beginDate = $_POST['begin_date'];
+     $endDate = $_POST['end_date'];
 
- $task = new Task(
-     $tittle,
-     $description,
-     $beginDate,
-     $endDate,
- );
+     $task = new Task(
+         $tittle,
+         $description,
+         $beginDate,
+         $endDate,
+     );
 
 
-$task->create();
-//}
+    $task->create();
+}
+
+ $tasks = Task::getList();
 ?>
 <html>
 <body>
@@ -36,7 +38,13 @@ $task->create();
      <button type="submit">enviar</button>
 
  </form>
+
+<div>
+    <ul>
+        <?php foreach($tasks as $task) {
+            echo "<li>".$task->getTitle()."</li>";
+        } ?>
+    </ul>
+</div>
 </body>
 </html>
-
-

@@ -7,7 +7,6 @@ use PDO;
 
 class Task
 {
-
     protected null|int $id = null;
     protected string $title;
     protected string $description;
@@ -29,6 +28,26 @@ class Task
         $this->beginDate = $beginDate;
         $this->endDate = $endDate;
         $this->createdAt = $createdAt;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getBeginDate(): string
+    {
+        return $this->beginDate;
     }
 
     public function create(): void
@@ -92,6 +111,32 @@ class Task
     public function setEndDate(string $endDate): void
     {
         $this->endDate = $endDate;
+    }
+
+
+    public static function getList(){
+        $conn = new ConnectionDB();
+        $sql = 'SELECT * FROM tasks';
+        $pdo  = $conn->pdo->prepare($sql);
+        $pdo->execute();
+
+        $tasks = $pdo->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($tasks)) {
+            return [];
+        }
+
+        $list = [];
+        foreach ($tasks as $task) {
+            $list[] = new Task(
+                $task['title'],
+                $task['description'],
+                $task['begin_date'],
+                $task['end_date'],
+                $task['id']
+            );
+        }
+        return $list;
     }
 
 }
