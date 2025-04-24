@@ -38,13 +38,33 @@ require_once 'Task.php';
      <button type="submit">enviar</button>
 
  </form>
-
 <div>
-    <ul>
-        <?php foreach($tasks as $task) {
-            echo "<li>".$task->getTitle()."</li>";
-        } ?>
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>TITTLE</th>
+                <th>BEGIN DATE</th>
+                <th>END DATE</th>
+                <th>ACTIONS</th>
+            </tr>
+        </thead>
+        <tbody>
+         <?php foreach($tasks as $task) {
+             echo "<tr>
+                 <td>{$task->getId()}</td>
+                 <td>{$task->getTittle()}</td>
+                 <td>{$task->getBeginDate()}</td>
+                 <td>{$task->getEndDate()}</td>
+                 <td>
+                    <a href="."edit.php?id={$task->getId()}".">E</a>
+                    <a href='./delete.php'>D</a>
+                 </td>
+            </tr>";
+         } ?>
+        </tbody>
+    </table>
 </div>
+
 </body>
 </html>

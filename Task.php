@@ -35,7 +35,7 @@ class Task
         return $this->id;
     }
 
-    public function getTitle(): string
+    public function getTittle(): string
     {
         return $this->title;
     }
@@ -48,6 +48,11 @@ class Task
     public function getBeginDate(): string
     {
         return $this->beginDate;
+    }
+
+    public function getEndDate(): ?string
+    {
+        return $this->endDate;
     }
 
     public function create(): void
@@ -113,6 +118,52 @@ class Task
         $this->endDate = $endDate;
     }
 
+    public function update(): bool
+    {
+        $conn = new ConnectionDB();
+        $sql = 'UPDATE tasks 
+                SET 
+                    title = :title, 
+                    description = :description, 
+                    begin_date = :begin_date, 
+                    end_date = :end_date
+                WHERE id = :id';
+        $pdo  = $conn->pdo->prepare($sql);
+        $params = [
+            ':title' => $this->title,
+            ':description' => $this->description,
+            ':begin_date' => $this->beginDate,
+            ':end_date' => $this->endDate,
+            ':id' => $this->id
+        ];
+
+       return $pdo->execute($params);
+    }
+
+    public static function findById(int $id): ?Task
+    {
+        $conn = new ConnectionDB();
+        $sql = 'SELECT * FROM tasks WHERE id = :id';
+        $pdo  = $conn->pdo->prepare($sql);
+        $params = [
+            ':id' => $id
+        ];
+
+        if($pdo->execute($params)) {
+            $row = $pdo->fetch(PDO::FETCH_ASSOC);
+            return new Task(
+                $row['title'],
+                $row['description'],
+                $row['begin_date'],
+                $row['end_date'],
+                $row['created_at'],
+                $row['id']
+            );
+        }
+
+        return null;
+    }
+
 
     public static function getList(){
         $conn = new ConnectionDB();
@@ -133,6 +184,7 @@ class Task
                 $task['description'],
                 $task['begin_date'],
                 $task['end_date'],
+                $task['created_at'],
                 $task['id']
             );
         }
