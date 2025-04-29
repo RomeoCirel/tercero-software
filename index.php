@@ -25,7 +25,10 @@ require_once 'Task.php';
     $task->create();
 }
 
- $tasks = Task::getList();
+ // validamos que la peticion sea GET y que exista search en la variable get
+// en caso contrario asignamos null
+ $search = $_SERVER['REQUEST_METHOD'] == 'GET' && $_GET['search']? $_GET['search'] : null;
+ $tasks = Task::getList($search);
 ?>
 <html>
 <body>
@@ -38,6 +41,13 @@ require_once 'Task.php';
      <button type="submit">enviar</button>
 
  </form>
+ <div>
+     <form action="#" method="get">
+         <label for="search">Buscar</label>
+         <input id="search" type="text" name="search" value="<?php echo $search; ?>" />
+         <button type="submit" >Buscar</button>
+     </form>
+ </div>
 <div>
     <table>
         <thead>

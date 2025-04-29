@@ -181,11 +181,23 @@ class Task
     }
 
 
-    public static function getList(){
+    public static function getList(?string $search = null){
         $conn = new ConnectionDB();
-        $sql = 'SELECT * FROM tasks';
-        $pdo  = $conn->pdo->prepare($sql);
-        $pdo->execute();
+        $baseSql = 'SELECT * FROM tasks';
+
+        if($search){
+            // $baseSql = "$baseSql WHERE title LIKE :search";
+            // el operador like sirve para buscar valores similares en el campo actual
+            // con ayuda de los auxiliares/comodines % nos permite buscar un valor parcial dentro de un string
+            $baseSql .= ' WHERE title LIKE :search';
+
+            $params = [
+                ':search' => "%{$search}%"
+            ];
+        }
+        $pdo  = $conn->pdo->prepare($baseSql);
+
+        $pdo->execute($params ?? null);
 
         $tasks = $pdo->fetchAll(PDO::FETCH_ASSOC);
 
