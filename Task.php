@@ -2,6 +2,8 @@
 
 namespace App;
 
+require_once "utilities\ConnectionDB.php";
+
 use App\utilities\ConnectionDB;
 use PDO;
 
@@ -140,6 +142,17 @@ class Task
        return $pdo->execute($params);
     }
 
+    public function delete(): bool
+    {
+        $conn = new ConnectionDB();
+        $sql = 'DELETE FROM tasks WHERE id = :id';
+        $pdo  = $conn->pdo->prepare($sql);
+        $params = [
+            ':id' => $this->id,
+        ];
+        return $pdo->execute($params);
+    }
+
     public static function findById(int $id): ?Task
     {
         $conn = new ConnectionDB();
@@ -151,14 +164,17 @@ class Task
 
         if($pdo->execute($params)) {
             $row = $pdo->fetch(PDO::FETCH_ASSOC);
-            return new Task(
-                $row['title'],
-                $row['description'],
-                $row['begin_date'],
-                $row['end_date'],
-                $row['created_at'],
-                $row['id']
-            );
+            // valida false|""|[]|null
+            if($row) {
+                return new Task(
+                    $row['title'],
+                    $row['description'],
+                    $row['begin_date'],
+                    $row['end_date'],
+                    $row['created_at'],
+                    $row['id']
+                );
+            }
         }
 
         return null;

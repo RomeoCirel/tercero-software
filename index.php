@@ -58,7 +58,7 @@ require_once 'Task.php';
                  <td>{$task->getEndDate()}</td>
                  <td>
                     <a href="."edit.php?id={$task->getId()}".">E</a>
-                    <a href='./delete.php'>D</a>
+                    <a href="."delete.php?id={$task->getId()}".">D</a>
                  </td>
             </tr>";
          } ?>
